@@ -1,0 +1,339 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+studio <- read.csv("C:/Users/Owner/OneDrive/Documente/data/Studio assessment 2017-2022.csv")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(readr)
+library(tidyr)
+```
+
+
+
+Count for each column
+```{r}
+
+#Q1 <- studio %>% count(NYC.Metro.Area.)
+#pie(table(studio$NYC.Metro.Area.))
+
+slices <- c(11, 20)
+lbls <- c("No-", "Yes-")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="")
+pie(slices,labels = lbls, col=wes_palette(n=2, "GrandBudapest1"),
+   main="Number of NYC Metro Area Clients \n in GSAPP Studios (2017-2022)")
+#pie(slices, labels = lbls,explode=0.1, main="Number of Clients Located in NYC Metro Area")
+
+```
+Question 2
+```{r}
+
+slices <- c(16, 13, 2)
+lbls <- c("No-", "Yes-", "Unknown-")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="")
+pie(slices,labels = lbls, col=c("#143151", "#5A435F","#C3C7E0"),
+   main="Number of NYC Neighborhood-Specific Clients \n in GSAPP Studios (2017-2022)")
+
+#use the Wednesday color palette c("#143151", "#5A435F","#C3C7E0", "#0A0C18")
+#wesanderson: col=wes_palette(n=3, name="GrandBudapest1")
+#col=rainbow(length(lbls)),
+```
+Practice making it more beautiful with ggplot and wes anderson palette
+```{r}
+
+library(wesanderson)
+paint <- wes_palette("GrandBudapest2", n=8, type="continuous")
+
+concerns <- words100 %>% slice_max(freq, n=8) #table with 30 rows and columns
+concerns %>% ggplot(aes(x=word, y=freq)) + geom_col() + geom_bar(stat='identity', fill=paint) + ggtitle("The Top 8 Community Concerns Recorded 1 Year After Hurricane Maria")
+```
+
+
+
+Q3
+```{r}
+slices <- c(17, 10, 1, 3)
+lbls <- c("No-", "Yes-", "Unknown-", "No and Yes-")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="")
+pie(slices,labels = lbls, col=wes_palette(n=4, "GrandBudapest1"),
+   main="Total Percentage of BIPOC Clients in \n GSAPP Studios (2017-2022)")
+```
+
+Q4
+```{r}
+slices <- c(25, 4, 2)
+lbls <- c("No-", "Yes-", "Unknown-")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="")
+pie(slices,labels = lbls, col=wes_palette(n=3, "GrandBudapest1"),
+   main="Percentage of BIPOC Clients from \n Community Based Organizations in GSAPP Studios (2017-2022)")
+```
+Q6
+```{r}
+slices <- c(21, 5, 5)
+lbls <- c("No-", "Yes-", "Unknown (Spring 2022)-")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls, pct) # add percents to labels
+lbls <- paste(lbls,"%",sep="")
+pie(slices,labels = lbls, col=c("#143151", "#5A435F","#C3C7E0"),
+   main="Ongoing, Continued Engagement with Clients \n from GSAPP Studios (2017-2022)")
+```
+
+Make a heat map with the boroughs:
+
+I need to make a separate dataframe where the Columns indicating it is NYC-based is Yes
+```{r}
+
+
+
+nyc <- studio %>% filter(grepl('YES', NYC.Metro.Area.))
+
+# %>%
+#    filter(month==1) %>%
+#    filter(day==1)
+
+```
+
+
+
+January 5th 2023: Pick up here, to do a count of all of the borough by combining the dataframes then project it into the map of NYC. Figure out what to do with Newark and Hudson Valley.
+
+
+Mutate the column to add the Borough
+```{r}
+
+library(tidyverse)
+library(magrittr)
+
+MN <- nyc %>% filter(Borough=="Manhattan")
+MN1 <- MN %>% mutate(Borough=str_replace(Borough, "Manhattan", "1"))
+MN2 <- nyc %>% filter(Borough1=="Manhattan")
+MN2 <- MN2 %>% mutate(Borough1, "Manhattan", "1")
+
+
+BK <- nyc %>% filter(Borough=="Brooklyn")
+BK1 <- BK %>% mutate(Borough=str_replace(Borough, "Brooklyn", "3"))
+BK2 <- nyc %>% filter(Borough1=="Brooklyn")
+BK2 <- BK2 %>% mutate(Borough1, "Brooklyn", "3")
+
+
+QN <- nyc %>% filter(Borough=="Queens")
+QN1 <- QN %>% mutate(Borough=str_replace(Borough, "Queens", "4"))
+QN2 <- nyc %>% filter(Borough1=="Manhattan")
+QN2 <- QN2 %>% mutate(Borough1, "Queens", "4")
+
+ST <- nyc %>% filter(Borough=="Staten Island")
+ST1 <- ST %>% mutate(Borough=str_replace(Borough, "Staten Island", "5"))
+ST2 <- nyc %>% filter(Borough1=="Staten Island")
+ST2 <- ST2 %>% mutate(Borough1, "Staten Island", "5")
+
+
+
+
+#nyc1 <- nyc %>% mutate(Borough = str_replace(c(Borough, "Manhattan", "1", "Bronx", "2", "Brooklyn", "3", "Queens", "4"))
+
+#PA2 <- PA1 %>% filter(Applicant.Type!="State Government")
+
+
+#barrios_vacant_land <- dat %>% group_by(vacantbuil) %>% count() #1888 vacant buildings
+#vacant_barrios <- dat %>% group_by(neighborhood) %>% count()
+
+#dat %>% filter(vacantbuil==TRUE) %>% group_by(neighborhood) %>% count() %>% arrange(desc(n))
+
+##Northside has the most vacant lots!!!
+
+
+#top_barrio <- dat %>% filter(vacantbuil==TRUE) %>% group_by(neighborhood) %>% count() %>% arrange(desc(n)) %>%
+  #head(1) %>% pull(neighborhood) 
+```
+
+
+
+
+Now, Create the HeatMap
+
+```{r}
+#install.packages("tigris")
+#install.packages("osmdata")
+#install.packages("spData")
+#install.packages("spDataLarge")
+```
+
+
+```{r}
+#install.packages("ggmap")
+
+
+library(ggmap)
+library(tigris)
+library(dplyr)
+library(leaflet)
+library(sp)
+library(ggmap)
+library(maptools)
+library(broom)
+library(httr)
+library(rgdal)
+library(osmdata)
+library(tmap)
+library(sf)
+library(spData)
+#library(spDataLarge)
+
+
+
+
+```
+
+Again
+```{r}
+
+nyc <- read_sf("https://data.cityofnewyork.us/api/geospatial/tqmj-j8zm?method=export&format=GeoJSON")
+
+
+```
+
+
+```{r}
+nyc
+
+```
+Need to label the new column with: boro_code
+5: Staten Island
+2: Bronx
+3: Brooklyn
+1: Manhattan
+4: Queens
+
+
+```{r}
+OLD_MAR <- par()$mar
+par(mar = rep(0, 4))
+plot(nyc$geometry, border = NA, col = alpha(nyc$boro_code, .2))
+legend("topleft",
+       legend = nyc$boro_name, col = nyc$boro_code,
+       pch = 15,
+       bty = "n")
+```
+
+```{r}
+plot(nyc$geometry)
+
+```
+
+
+
+```{r}
+OLD_MAR <- par()$mar
+par(mfrow = c(1, 1), mar = c(0, 0, 0, 0))
+plot(nyc$geometry)
+```
+
+
+
+
+IGNORE PLAYING WITH GGPLOT (i STILL DONT GET IT)
+
+
+Prettier Graph Visualizations
+
+Q2
+```{r}
+#library(wesanderson)
+#paint <- wes_palette("GrandBudapest2", n=3, type="continuous")
+
+slices <- c(16, 13, 2)
+Responses <- c("No", "Yes", "Unknown")
+pct <- round(slices/sum(slices)*100)
+Responses <- paste(Responses, pct) # add percents to labels
+Responses <- paste(Responses,"%",sep="")
+
+df <- data.frame(slices, Responses, pct)
+
+
+
+ggplot(df, aes(x="", y = "Total of 31 Observations", fill = Responses)) + geom_col(color = "black") +
+  geom_label(aes(label = pct),
+             color = "black",
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  coord_polar(theta = "y") + scale_fill_manual(values = c("#143151", "#5A435F",
+                               "#C3C7E0")) + ggtitle("Number of NYC Neighborhood Specific Clients \n in GSAPP Studios from 2017-2022")
+   
+   
+#to generate random colors use: + scale_fill_brewer()
+
+
+
+```
+
+
+```{r}
+#Q3 <- studio %>% count(BIPOC.US.community.)
+
+slices <- c(17, 10, 1, 3)
+Responses <- c("No", "Yes", "Unknown", "No and Yes")
+pct <- round(slices/sum(slices)*100)
+Responses <- paste(Responses, pct) # add percents to labels
+Responses <- paste(Responses,"%",sep="")
+
+df1 <- data.frame(slices, Responses, pct)
+
+
+
+ggplot(df1, aes(x="", y = "Total of 31 Observations", fill = Responses)) + geom_col(color = "black") +
+  geom_label(aes(label = pct),
+             color = "white",
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  coord_polar(theta = "y") + scale_fill_manual(values = c("#143151", "#5A435F",
+                               "#C3C7E0", "#0A0C18")) + ggtitle("Total Percentage of BIPOC Clients in \n GSAPP Studios from 2017-2022")
+
+
+
+
+```
+
+```{r}
+Q4 <- studio %>% count(CBO.Grassroots.Advocacy.Client.from.BIPOC.Community.)
+```
+
+```{r}
+Q5 <- studio %>% count(Significant.community.engagement...2.3.or.more.site.visits..ideally.3..to.the.same.neighborhoods.AND.multiple.engagements.with.residents..small.merchants..community.leaders..organizations..and.stakeholders.)
+```
+
+```{r}
+Q6 <- studio %>% count(Ongoing.studio.project.)
+```
+
+
+```{r}
+
+```
+
+
+
+
+```{r}
+library(wesanderson)
+paint <- wes_palette("GrandBudapest2", n=8, type="continuous")
+
+concerns <- words100 %>% slice_max(freq, n=8) #table with 30 rows and columns
+concerns %>% ggplot(aes(x=word, y=freq)) + geom_col() + geom_bar(stat='identity', fill=paint) + ggtitle("The Top 8 Community Concerns Recorded 1 Year After Hurricane Maria")
+```
+
